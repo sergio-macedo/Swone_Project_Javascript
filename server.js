@@ -15,23 +15,21 @@ app.get('/api/quotes/random', (req, res, next) => {
    
 });
 
- // get all the quotes 
-app.get('/api/quotes', (req, res, next ) => {
-    res.send({quote:quotes});
-});
+// picking all quotes and the quotes directly from the owner.
+app.get('/api/quotes', (req, res, next) => {
+    const ownerQuotes = quotes.filter(author => {
+    
+    return author.person === req.query.person;
+    });
 
-// get all the quotes from a especific person TODO
-app.get('/api/quotes?person', (req, res, next) => {
-    const quoteOwner = {
-        quote: req.query.person
-    };
-    if(quoteOwner) {
-        res.send({quote:quoteOwner});
+    if (req.query.person) {
+      res.send({ quotes: ownerQuotes });
     } else {
-        res.send();
+      res.send({ quotes: quotes });
     }
-});
+  }) 
 
+// put a new quote inside. testing
 app.post('/api/quotes', (req, res, next) => {
     const newQuotation = {
         quote: req.query.quote, person: req.query.person
@@ -48,5 +46,5 @@ app.post('/api/quotes', (req, res, next) => {
 
 
 app.listen(PORT, () => {
-    console.log(`Linstening on port ${PORT}`);
+    console.log(`Listening on port ${PORT}`);
 })
